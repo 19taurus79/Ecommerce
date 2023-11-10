@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "ecom.apps.EcomConfig",
+    "cart.apps.CartConfig",
+    "import_export",
 ]
 
 MIDDLEWARE = [
@@ -127,3 +129,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+IMPORT_EXPORT_USE_TRANSACTIONS = True

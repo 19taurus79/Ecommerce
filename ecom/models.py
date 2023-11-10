@@ -1,6 +1,8 @@
 """This module describes the database models"""
 import datetime
 from django.db import models
+from django.urls import reverse
+from django.utils import timezone
 
 
 # Create your models here.
@@ -10,9 +12,13 @@ class Category(models.Model):
     """A category model"""
 
     name = models.CharField(max_length=50, verbose_name="Категория")
+    is_active = models.BooleanField(default=True, verbose_name="Активен")
 
     def __str__(self):
         return f"{self.name}"
+
+    def get_absolute_url(self):
+        return reverse("category", args=[int(self.pk)])
 
     class Meta:
         verbose_name = "Категория"
@@ -50,9 +56,20 @@ class Product(models.Model):
         max_length=200, blank=True, null=True, verbose_name="Описание"
     )
     image = models.ImageField(upload_to="uploads/products", verbose_name="Фотография")
+    is_sale = models.BooleanField(default=False, verbose_name="Распродажа")
+    sale_price = models.DecimalField(
+        max_digits=6, default=0, decimal_places=2, verbose_name="Цена распродажи"
+    )
+    is_active = models.BooleanField(default=True, verbose_name="Активен")
+    is_reserved = models.BooleanField(default=False, verbose_name="Резерв")
+    payment = models.BooleanField(default=False, verbose_name="Оплачен")
+    created = models.DateTimeField(default=timezone.now(), verbose_name="Добавлен")
 
     def __str__(self):
         return f"{self.name}"
+
+    def get_absolute_url(self):
+        return reverse("product", args=[(int(self.pk))])
 
     class Meta:
         verbose_name = "Товар"
@@ -73,9 +90,7 @@ class Order(models.Model):
     phone = models.CharField(
         max_length=15, default="", blank=True, verbose_name="Телефон"
     )
-    date = models.DateField(
-        default=datetime.datetime.today(), verbose_name="Дата покупки"
-    )
+    date = models.DateField(default=timezone.now(), verbose_name="Дата покупки")
     status = models.BooleanField(default=False, verbose_name="Статус")
 
     def __str__(self):
